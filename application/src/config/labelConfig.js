@@ -4,4 +4,5 @@ export default {
     token_not_found: 'Token not found',
     user_not_found: 'User not found',
     internal_error: 'Internal error',
+    forbidden: 'Forbidden',
 }

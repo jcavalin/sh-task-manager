@@ -7,6 +7,6 @@ export default class AuthorizationToken {
     }
 
     verify(token, callback) {
-        jsonwebtoken.verify(token, env.JWT_SECRET, callback);
+        jsonwebtoken.verify(token, env.JWT_SECRET, callback); // @todo Improve verification
     }
 }

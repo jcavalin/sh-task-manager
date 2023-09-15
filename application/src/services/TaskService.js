@@ -1,6 +1,7 @@
 import TaskRepository from "../repositories/TaskRepository.js";
 import UserService from "./UserService.js";
 import labelConfig from "../config/labelConfig.js";
+import roleConfig from "../config/roleConfig";
 
 export default class TaskService {
 
@@ -8,8 +9,12 @@ export default class TaskService {
         this.repository = new TaskRepository();
     }
 
-    findAll() {
-        return this.repository.select();
+    findAll(tokenInfo) {
+        if (tokenInfo.role === roleConfig.manager) {
+            return this.repository.getAll();
+        }
+
+        return this.repository.getByUser(tokenInfo.user_id);
     }
 
     async create(task) {

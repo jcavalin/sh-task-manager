@@ -7,7 +7,7 @@ export default class TaskController {
     }
 
     async listAction(req, res) {
-        res.send(await this.service.findAll());
+        res.send(await this.service.findAll(req.token));
     }
 
     async createAction(req, res) {
