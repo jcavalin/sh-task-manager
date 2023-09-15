@@ -1,7 +1,7 @@
 import TaskRepository from "../repositories/TaskRepository.js";
 import UserService from "./UserService.js";
-import labelConfig from "../config/labelConfig.js";
-import roleConfig from "../config/roleConfig";
+import label from "../config/labelConfig.js";
+import { manager } from "../config/roleConfig.js";
 
 export default class TaskService {
 
@@ -10,11 +10,7 @@ export default class TaskService {
     }
 
     findAll(tokenInfo) {
-        if (tokenInfo.role === roleConfig.manager) {
-            return this.repository.getAll();
-        }
-
-        return this.repository.getByUser(tokenInfo.user_id);
+        return this.repository.findAll(tokenInfo.role === manager ? null : tokenInfo.email);
     }
 
     async create(task) {
@@ -22,7 +18,7 @@ export default class TaskService {
         const user = await userService.getByEmail(task.email);
 
         if (!user) {
-            throw new Error(labelConfig.user_not_found);
+            throw new Error(label('user_not_found'));
         }
 
         return this.repository.insert({

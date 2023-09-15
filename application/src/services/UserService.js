@@ -1,5 +1,5 @@
 import UserRepository from "../repositories/UserRepository.js";
-import labelConfig from "../config/labelConfig.js";
+import label from "../config/labelConfig.js";
 import AuthorizationToken from "../helpers/AuthorizationToken.js";
 import PasswordManager from "../helpers/PasswordManager.js";
 
@@ -18,7 +18,7 @@ export default class UserService {
         const passwordManager = new PasswordManager();
 
         if (!user || !passwordManager.isValid(password, user.password)) {
-            throw new Error(labelConfig.authentication_failed);
+            throw new Error(label('authentication_failed'));
         }
 
         const authorizationToken = new AuthorizationToken();

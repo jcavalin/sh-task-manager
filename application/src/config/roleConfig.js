@@ -1,4 +1,7 @@
-export default {
-    technician: 'TECHNICIAN',
-    manager: 'MANAGER',
+const technician = 'TECHNICIAN';
+const manager = 'MANAGER';
+
+export {
+    technician,
+    manager
 }
