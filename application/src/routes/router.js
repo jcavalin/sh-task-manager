@@ -1,15 +1,13 @@
+import authorizer from "./middlewares/authorizer.js";
 import IndexController from '../controllers/IndexController.js';
-import LoginController from '../controllers/LoginController.js';
+import UserController from '../controllers/UserController.js';
 import TaskController from '../controllers/TaskController.js';
 
 export default function (app) {
-    app.route('/')
-        .get((req, res) => new IndexController().indexAction(req, res));
+    app.get('/', (req, res) => new IndexController().indexAction(req, res));
 
-    app.route('/login/auth')
-        .post((req, res) => new LoginController().authAction(req, res));
+    app.post('/login/auth', (req, res) => new UserController().authenticateAction(req, res));
 
-    app.route('/tasks')
-        .get((req, res) => new TaskController().listAction(req, res))
-        .post((req, res) => new TaskController().createAction(req, res));
+    app.get('/tasks', authorizer, (req, res) => new TaskController().listAction(req, res));
+    app.post('/tasks', authorizer, (req, res) => new TaskController().createAction(req, res))
 };

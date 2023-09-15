@@ -1,4 +1,5 @@
 import TaskService from "../services/TaskService.js";
+import labelConfig from "../config/labelConfig.js";
 
 export default class TaskController {
     constructor() {
@@ -10,6 +11,12 @@ export default class TaskController {
     }
 
     async createAction(req, res) {
-        res.send({'id': await this.service.create(req.body)});
+        try {
+            const id = await this.service.create({...req.body, ...req.token});
+            res.send({id});
+        } catch (error) {
+            console.error(error); // @todo Change to a proper logger
+            res.status(500).send({message: labelConfig.internal_error});
+        }
     }
 }

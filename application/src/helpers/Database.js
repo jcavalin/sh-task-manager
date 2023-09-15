@@ -6,8 +6,8 @@ export default class Database {
         return await mysql.createConnection(databaseConfig);
     }
 
-    async execute(sql, params) {
-        const [results,] = await (await this.connection()).execute(sql, params);
+    async execute(sql, parameters) {
+        const [results] = await (await this.connection()).execute(sql, parameters);
 
         return results;
     }
@@ -21,6 +21,12 @@ export default class Database {
         );
 
         return result.insertId;
+    }
+
+    async fetchOne(sql, parameters) {
+        const result = await this.execute(sql, parameters);
+
+        return result.find(() => true);
     }
 
 }

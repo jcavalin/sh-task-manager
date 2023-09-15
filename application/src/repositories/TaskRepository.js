@@ -1,11 +1,6 @@
-import Database from "../helpers/Database.js";
+import AbstractRepository from "./AbstractRepository.js";
 
-export default class TaskRepository {
-
-    constructor() {
-        this.db = new Database();
-    }
-
+export default class TaskRepository extends AbstractRepository {
     select() {
         return this.db.execute(
             "SELECT id, summary, date, created_at, updated_at, user_id FROM app.task ORDER BY created_at DESC"

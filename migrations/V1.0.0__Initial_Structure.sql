@@ -1,6 +1,7 @@
 CREATE TABLE app.user (
     id SERIAL PRIMARY KEY NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(60) NOT NULL,
     role VARCHAR(10) NOT NULL
 );
 

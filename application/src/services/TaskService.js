@@ -1,4 +1,6 @@
 import TaskRepository from "../repositories/TaskRepository.js";
+import UserService from "./UserService.js";
+import labelConfig from "../config/labelConfig.js";
 
 export default class TaskService {
 
@@ -10,7 +12,18 @@ export default class TaskService {
         return this.repository.select();
     }
 
-    create(task) {
-        return this.repository.insert(task);
+    async create(task) {
+        const userService = new UserService();
+        const user = await userService.getByEmail(task.email);
+
+        if (!user) {
+            throw new Error(labelConfig.user_not_found);
+        }
+
+        return this.repository.insert({
+            summary: task.summary,
+            date: task.date,
+            user_id: user.id
+        });
     }
 }
