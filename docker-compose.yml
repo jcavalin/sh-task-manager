@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+
+  application:
+    build: ./application
+    ports:
+      - "80:80"
+    # depends_on:
+      # - db
+      # - mailhog
+      # - rabbitmq
+      # - flyway
+    environment:
+      APP_PORT: 80
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_DATABASE: app
+      DB_USERNAME: mysql
+      DB_PASSWORD: mypass
+      EMAIL_HOST: mailhog
+      EMAIL_USERNAME: ''
+      EMAIL_PASSWORD: ''
+      EMAIL_PORT: 1025
+      EMAIL_FROM: notify@shtaskmapp.com
+      QUEUE_HOST: rabbitmq
+      QUEUE_PORT: 5672
+      QUEUE_USER: myuser
+      QUEUE_PASSWORD: mypassword
+      QUEUE_EXCHANGE: router
+      QUEUE_NAME: notify
+    volumes:
+      - ./application:/usr/app
+
+  # db:
+  #   image: mysql:8.1.0
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   environment:
+  #     MYSQL_USER: mysql
+  #     MYSQL_PASSWORD: mypass
+  #     MYSQL_ROOT_PASSWORD: myrootpass
+  #     MYSQL_DATABASE: app
+  #   ports:
+  #     - "3306:3306"
+
+  # adminer:
+  #   image: adminer:4.8.1-standalone
+  #   ports:
+  #     - "8081:8080"
+  #   depends_on:
+  #     - db
+
+  # flyway:
+  #   image: flyway/flyway:9.22.1
+  #   command: -url=jdbc:mysql://db -schemas=app -user=mysql -password=mypass -connectRetries=60 migrate
+  #   volumes:
+  #     - ./migrations:/flyway/sql
+  #   depends_on:
+  #     - db
+
+  # swagger:
+  #   image: swaggerapi/swagger-ui
+  #   ports:
+  #     - "80:8080"
+  #   depends_on:
+  #     - application
+  #   environment:
+  #     SWAGGER_JSON: /tmp/openapi.json
+  #   volumes:
+  #     - ./application/docs/openapi.json:/tmp/openapi.json
+
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   ports:
+  #     - "1025:1025"
+  #     - "8082:8025"
+  #   command: -jim-accept=0.5 -jim-linkspeed-affect=0.5 -jim-linkspeed-max=1024
+
+  # rabbitmq:
+  #   image: rabbitmq:3.12-management-alpine
+  #   ports:
+  #     - '5672:5672'
+  #     - '8083:15672'
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=myuser
+  #     - RABBITMQ_DEFAULT_PASS=mypassword

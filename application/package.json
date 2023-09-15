@@ -1,0 +1,18 @@
+{
+  "name": "sh-task-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SH Task Manager System",
+  "author": "Julio Cavalin",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
