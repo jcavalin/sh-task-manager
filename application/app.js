@@ -1,17 +1,15 @@
 'use strict';
 
 import express from 'express';
-import process from 'node:process';
-import Router from './src/routes/Router.js';
+import {env} from 'node:process';
+import router from './src/routes/router.js';
 
-const PORT = process.env.APP_PORT || 80;
 const app = express();
 
 app.use(express.json());
+router(app);
 
-const router = new Router(app);
-router.setRoutes();
-
+const PORT = env.APP_PORT || 80;
 app.listen(PORT, () => {
     console.log(`Running on ${PORT}`);
 });

@@ -1,9 +1,15 @@
+import TaskService from "../services/TaskService.js";
+
 export default class TaskController {
-    listAction(req, res) {
-        res.send({'action': 'get tasks'});
+    constructor() {
+        this.service = new TaskService();
     }
 
-    createAction(req, res) {
-        res.send({'action': 'create tasks'});
+    async listAction(req, res) {
+        res.send(await this.service.findAll());
+    }
+
+    async createAction(req, res) {
+        res.send({'id': await this.service.create(req.body)});
     }
 }
