@@ -28,7 +28,7 @@ async function createTask(task) {
 
     const taskCreated = await getTaskById(id);
     notifyMangersNewTask(taskCreated).then(
-        () => console.log("Managers notified"),
+        () => console.log("Notification queued"),
         (error) => console.error(error)
     );
 
@@ -47,7 +47,7 @@ async function notifyMangersNewTask(task) {
         ${task.summary}
     `;
 
-    await asyncSendMail(
+    return asyncSendMail(
         `Task #${task.id} has been created`,
         message,
         emails
