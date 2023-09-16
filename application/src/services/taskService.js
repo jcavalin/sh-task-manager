@@ -2,6 +2,8 @@ import {fetchTaskById, fetchTasks, insertTask} from "../repositories/taskReposit
 import {getUserByEmail} from "./userService.js";
 import label from "../config/labelConfig.js";
 import {manager} from "../config/roleConfig.js";
+import {asyncSendMail} from "../helpers/mailer.js";
+import {getManagersEmails} from "../repositories/userRepository.js";
 
 function getTasks(tokenInfo) {
     return fetchTasks(tokenInfo.role === manager ? null : tokenInfo.email);
@@ -24,7 +26,32 @@ async function createTask(task) {
         user_id: user.id
     });
 
-    return getTaskById(id);
+    const taskCreated = await getTaskById(id);
+    notifyMangersNewTask(taskCreated).then(
+        () => console.log("Managers notified"),
+        (error) => console.error(error)
+    );
+
+    return taskCreated;
+}
+
+async function notifyMangersNewTask(task) {
+    const emails = await getManagersEmails();
+    task = obfuscatePrivateData(task);
+
+    const date = new Date(task.date).toISOString();
+    const message = `
+        The tech "${task.technician}" performed a new the task on date "${date}".
+        
+        Summary:
+        ${task.summary}
+    `;
+
+    await asyncSendMail(
+        `Task #${task.id} has been created`,
+        message,
+        emails
+    );
 }
 
 /**

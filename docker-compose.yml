@@ -26,10 +26,9 @@ services:
       EMAIL_FROM: notify@shtaskmapp.com
       QUEUE_HOST: rabbitmq
       QUEUE_PORT: 5672
-      QUEUE_USER: myuser
+      QUEUE_USERNAME: myuser
       QUEUE_PASSWORD: mypassword
-      QUEUE_EXCHANGE: router
-      QUEUE_NAME: notify
+      QUEUE_NOTIFY_NAME: notify
     volumes:
       - ./application:/usr/app
 

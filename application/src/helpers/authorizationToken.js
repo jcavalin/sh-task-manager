@@ -1,12 +1,12 @@
 import jsonwebtoken from "jsonwebtoken";
-import {env} from 'node:process';
+import tokenConfig from "../config/tokenConfig.js";
 
 function generateToken(payload) {
-    return jsonwebtoken.sign(payload, env.JWT_SECRET, {expiresIn: 3600});
+    return jsonwebtoken.sign(payload, tokenConfig.secret, {expiresIn: 3600});
 }
 
 function verifyToken(token, callback) {
-    jsonwebtoken.verify(token, env.JWT_SECRET, callback); // @todo Improve verification
+    jsonwebtoken.verify(token, tokenConfig.secret, callback); // @todo Improve verification
 }
 
 export {
