@@ -1,6 +1,6 @@
 import {executeQuery, fetchOne, insert} from '../helpers/database.js'
 
-function selectTasks(userEmail) {
+function fetchTasks(userEmail) {
     let where = '';
     let parameters = [];
     if (userEmail) {
@@ -27,7 +27,7 @@ function selectTasks(userEmail) {
     );
 }
 
-function getTaskById(id) {
+function fetchTaskById(id) {
     return fetchOne(
         `SELECT 
                     task.uid AS id,
@@ -46,18 +46,16 @@ function getTaskById(id) {
     );
 }
 
-async function insertTask(task) {
-    const id = await insert(
+function insertTask(task) {
+    return insert(
         'app.task',
         ['summary', 'date', 'user_id'],
         [task.summary, task.date, task.user_id]
     );
-
-    return getTaskById(id);
 }
 
 export {
-    selectTasks,
-    getTaskById,
+    fetchTasks,
+    fetchTaskById,
     insertTask
 }

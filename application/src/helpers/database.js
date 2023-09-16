@@ -1,8 +1,8 @@
 import mysql from 'mysql2/promise';
 import databaseConfig from "../config/databaseConfig.js";
 
-async function connection() {
-    return await mysql.createConnection(databaseConfig);
+function connection() {
+    return mysql.createConnection(databaseConfig);
 }
 
 async function executeQuery(sql, parameters) {
@@ -21,7 +21,7 @@ async function insert(table, columns, values) {
 
 async function fetchOne(sql, parameters) {
     const result = await executeQuery(sql, parameters);
-
+    // return the first result only
     return result.find(() => true);
 }
 

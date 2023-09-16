@@ -15,7 +15,6 @@ async function createTaskAction(req, res) {
         }
 
         const id = await createTask({...value, ...req.token});
-
         res.send({id});
     } catch (error) {
         console.error(error); // @todo Change to a proper logger
