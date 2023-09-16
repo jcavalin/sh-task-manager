@@ -3,7 +3,13 @@ import label from "../helpers/label.js";
 import {validateCreateTask} from "./validators/taskValidator.js";
 
 async function listTasksAction(req, res) {
-    res.send(await getTasks(req.token));
+    try {
+        res.send(await getTasks(req.token.email));
+    } catch (error) {
+        console.error(error); // @todo Change to a proper logger
+
+        res.status(500).send({message: label('internal_error')});
+    }
 }
 
 async function createTaskAction(req, res) {
@@ -14,8 +20,7 @@ async function createTaskAction(req, res) {
             return;
         }
 
-        const id = await createTask({...value, ...req.token});
-        res.send({id});
+        res.send(await createTask({...value, ...req.token}));
     } catch (error) {
         console.error(error); // @todo Change to a proper logger
 

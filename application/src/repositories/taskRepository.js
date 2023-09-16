@@ -37,12 +37,30 @@ function fetchTaskById(id) {
                     task.updated_at,
                     user.email AS technician
                 FROM 
+                    app.task task
+                INNER JOIN
+                    app.user user ON task.user_id = user.id
+                WHERE 
+                    task.id = ?`,
+        [id]
+    );
+}
+function fetchTaskByUid(uid) {
+    return fetchOne(
+        `SELECT 
+                    task.uid AS id,
+                    task.summary,
+                    task.date,
+                    task.created_at,
+                    task.updated_at,
+                    user.email AS technician
+                FROM 
                   app.task task
                 INNER JOIN
                   app.user user ON task.user_id = user.id
                 WHERE 
-                  task.id = ?`,
-        [id]
+                  task.uid = ?`,
+        [uid]
     );
 }
 
@@ -57,5 +75,6 @@ function insertTask(task) {
 export {
     fetchTasks,
     fetchTaskById,
+    fetchTaskByUid,
     insertTask
 }

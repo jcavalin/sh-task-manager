@@ -5,12 +5,26 @@ import {isManagerUser} from "../helpers/role.js";
 import {asyncSendMail} from "../helpers/mailer.js";
 import {getManagersEmails} from "../repositories/userRepository.js";
 
-function getTasks(tokenInfo) {
-    return fetchTasks(isManagerUser(tokenInfo) ? null : tokenInfo.email);
+async function getTasks(email) {
+    const user = await getUserByEmail(email);
+    if (!user) {
+        throw new Error(label('user_not_found'));
+    }
+
+    const result = await fetchTasks(isManagerUser(user) ? null : user.email);
+    return result.map(formatTaskToReturn);
 }
 
-function getTaskById(id) {
-    return fetchTaskById(id);
+async function getTaskById(id) {
+    const task = await fetchTaskById(id);
+
+    return formatTaskToReturn(task);
+}
+
+function formatTaskToReturn(task) {
+    task.date = new Date(task.date).toISOString().slice(0, 10);
+
+    return task;
 }
 
 async function createTask(task) {
@@ -27,22 +41,23 @@ async function createTask(task) {
     });
 
     const taskCreated = await getTaskById(id);
+
     notifyMangersNewTask(taskCreated).then(
-        () => console.log("Notification queued"),
+        () => {/*console.log("Notification queued")*/},
         (error) => console.error(error)
     );
 
-    return taskCreated;
+    return formatTaskToReturn(taskCreated);
 }
 
 async function notifyMangersNewTask(task) {
-    const emails = await getManagersEmails();
+    task = formatTaskToReturn(task);
     task = obfuscatePrivateData(task);
 
-    const date = new Date(task.date).toISOString();
+    const emails = await getManagersEmails();
     const id = task.id.split('-')[0];
     const message = `
-        The tech "${task.technician}" performed a new the task on date "${date}".
+        The tech "${task.technician}" performed a new the task on date "${task.date}".
 
         Summary:
         ${task.summary}

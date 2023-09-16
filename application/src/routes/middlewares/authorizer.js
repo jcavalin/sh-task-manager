@@ -8,7 +8,7 @@ export default (req, res, next) => {
     }
 
     verifyToken(token, function (error, decoded) {
-        if (error) {
+        if (error || !decoded.role || !decoded.email) {
             return res.status(403).send({message: label('token_invalid')});
         }
 
