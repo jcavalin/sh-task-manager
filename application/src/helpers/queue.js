@@ -9,7 +9,7 @@ async function createConnection() {
 
 async function queueMessage(queue, message) {
     let connection;
-    
+
     try {
         connection = await createConnection();
         const channel = await connection.createChannel();
@@ -18,7 +18,7 @@ async function queueMessage(queue, message) {
             message = JSON.stringify(message);
         }
 
-        await channel.assertQueue(queueConfig.name, {durable: false});
+        await channel.assertQueue(queue, {durable: false});
         channel.sendToQueue(queue, Buffer.from(message));
         console.log(`Sent to queue '${queue}': ${message}`); // @todo Add a proper log
 

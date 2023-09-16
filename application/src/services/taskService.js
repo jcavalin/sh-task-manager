@@ -42,7 +42,7 @@ async function notifyMangersNewTask(task) {
     const date = new Date(task.date).toISOString();
     const message = `
         The tech "${task.technician}" performed a new the task on date "${date}".
-        
+
         Summary:
         ${task.summary}
     `;
