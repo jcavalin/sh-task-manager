@@ -6,7 +6,7 @@ async function listTasksAction(req, res) {
     try {
         res.send(await getTasks(req.token.email));
     } catch (error) {
-        console.error(error); // @todo Change to a proper logger
+        // console.error(error); // @todo Change to a proper logger
 
         res.status(500).send({message: label('internal_error')});
     }
@@ -22,7 +22,7 @@ async function createTaskAction(req, res) {
 
         res.send(await createTask({...value, ...req.token}));
     } catch (error) {
-        console.error(error); // @todo Change to a proper logger
+        // console.error(error); // @todo Change to a proper logger
 
         res.status(500).send({message: label('internal_error')});
     }

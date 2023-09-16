@@ -8,7 +8,6 @@ services:
       - "80:80"
     depends_on:
       - db
-#      - mailhog
       - rabbitmq
       - flyway
     environment:
@@ -19,10 +18,6 @@ services:
       DB_DATABASE: app
       DB_USERNAME: mysql
       DB_PASSWORD: mypass
-      EMAIL_HOST: mailhog
-      EMAIL_USERNAME: ''
-      EMAIL_PASSWORD: ''
-      EMAIL_PORT: 1025
       EMAIL_FROM: notify@shtaskmapp.com
       QUEUE_HOST: rabbitmq
       QUEUE_PORT: 5672
@@ -31,6 +26,22 @@ services:
       QUEUE_NOTIFY_NAME: notify
     volumes:
       - ./application:/usr/app
+
+  consumer:
+      build: ./consumer
+      depends_on:
+        - rabbitmq
+        - mailhog
+      environment:
+        EMAIL_HOST: mailhog
+        EMAIL_USERNAME: ''
+        EMAIL_PASSWORD: ''
+        EMAIL_PORT: 1025
+        QUEUE_HOST: rabbitmq
+        QUEUE_PORT: 5672
+        QUEUE_USERNAME: myuser
+        QUEUE_PASSWORD: mypassword
+        QUEUE_NOTIFY_NAME: notify
 
   db:
     image: mysql:8.1.0
@@ -69,13 +80,13 @@ services:
 #      volumes:
 #        - ./application/docs/openapi.json:/tmp/openapi.json
 #
-#    mailhog:
-#      image: mailhog/mailhog
-#      ports:
-#        - "1025:1025"
-#        - "8082:8025"
-#      command: -jim-accept=0.5 -jim-linkspeed-affect=0.5 -jim-linkspeed-max=1024
-#
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8082:8025"
+    command: -jim-accept=0.5 -jim-linkspeed-affect=0.5 -jim-linkspeed-max=1024
+
   rabbitmq:
     image: rabbitmq:3.12-management-alpine
     ports:
