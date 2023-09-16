@@ -1,4 +1,4 @@
-import label from "../../config/labelConfig.js";
+import label from "../../helpers/label.js";
 
 export default (roles) => {
     return (req, res, next) => {

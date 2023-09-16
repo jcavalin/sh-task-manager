@@ -1,4 +1,4 @@
-import label from "../../config/labelConfig.js";
+import label from "../../helpers/label.js";
 import {verifyToken} from "../../helpers/authorizationToken.js";
 
 export default (req, res, next) => {

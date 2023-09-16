@@ -1,6 +1,6 @@
 import joi from "joi";
 import {authenticateUser} from "../services/userService.js";
-import label from "../config/labelConfig.js";
+import label from "../helpers/label.js";
 import {validateAuthenticateUser} from "./validators/userValidator.js";
 
 async function authenticateAction(req, res) {

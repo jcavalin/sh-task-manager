@@ -1,12 +1,12 @@
 import {fetchTaskById, fetchTasks, insertTask} from "../repositories/taskRepository.js";
 import {getUserByEmail} from "./userService.js";
-import label from "../config/labelConfig.js";
-import {manager} from "../config/roleConfig.js";
+import label from "../helpers/label.js";
+import {isManagerUser} from "../helpers/role.js";
 import {asyncSendMail} from "../helpers/mailer.js";
 import {getManagersEmails} from "../repositories/userRepository.js";
 
 function getTasks(tokenInfo) {
-    return fetchTasks(tokenInfo.role === manager ? null : tokenInfo.email);
+    return fetchTasks(isManagerUser(tokenInfo) ? null : tokenInfo.email);
 }
 
 function getTaskById(id) {
@@ -40,6 +40,7 @@ async function notifyMangersNewTask(task) {
     task = obfuscatePrivateData(task);
 
     const date = new Date(task.date).toISOString();
+    const id = task.id.split('-')[0];
     const message = `
         The tech "${task.technician}" performed a new the task on date "${date}".
 
@@ -48,7 +49,7 @@ async function notifyMangersNewTask(task) {
     `;
 
     return asyncSendMail(
-        `Task #${task.id} has been created`,
+        `Task #${id} has been created`,
         message,
         emails
     );

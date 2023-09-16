@@ -20,7 +20,7 @@ async function queueMessage(queue, message) {
 
         await channel.assertQueue(queue, {durable: false});
         channel.sendToQueue(queue, Buffer.from(message));
-        console.log(`Sent to queue '${queue}': ${message}`); // @todo Add a proper log
+        console.log(`Sent to queue '${queue}'`); // @todo Add a proper log
 
         await channel.close();
     } catch (err) {

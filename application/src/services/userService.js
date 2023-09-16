@@ -1,5 +1,5 @@
 import {getUserByEmail} from "../repositories/userRepository.js";
-import label from "../config/labelConfig.js";
+import label from "../helpers/label.js";
 import {generateToken} from "../helpers/authorizationToken.js";
 import {isValidPassword} from "../helpers/passwordManager.js";
 

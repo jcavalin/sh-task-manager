@@ -1,5 +1,5 @@
 import {createTask, getTasks} from "../services/taskService.js";
-import label from "../config/labelConfig.js";
+import label from "../helpers/label.js";
 import {validateCreateTask} from "./validators/taskValidator.js";
 
 async function listTasksAction(req, res) {
