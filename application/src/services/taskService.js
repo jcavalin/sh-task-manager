@@ -1,10 +1,10 @@
-import {findAllTasks as repositoryFindAllTasks, insertTask} from "../repositories/taskRepository.js";
+import {selectTasks, insertTask} from "../repositories/taskRepository.js";
 import {getUserByEmail} from "./userService.js";
 import label from "../config/labelConfig.js";
 import {manager} from "../config/roleConfig.js";
 
-function findAllTasks(tokenInfo) {
-    return repositoryFindAllTasks(tokenInfo.role === manager ? null : tokenInfo.email);
+function getTasks(tokenInfo) {
+    return selectTasks(tokenInfo.role === manager ? null : tokenInfo.email);
 }
 
 async function createTask(task) {
@@ -22,6 +22,6 @@ async function createTask(task) {
 }
 
 export {
-    findAllTasks,
+    getTasks,
     createTask
 }

@@ -1,8 +1,8 @@
-import {createTask, findAllTasks} from "../services/taskService.js";
+import {createTask, getTasks} from "../services/taskService.js";
 import label from "../config/labelConfig.js";
 
 async function listTasksAction(req, res) {
-    res.send(await findAllTasks(req.token));
+    res.send(await getTasks(req.token));
 }
 
 async function createTaskAction(req, res) {

@@ -1,6 +1,6 @@
 import {executeQuery, fetchOne, insert} from '../helpers/database.js'
 
-function findAllTasks(userEmail) {
+function selectTasks(userEmail) {
     let where = '';
     let parameters = [];
     if (userEmail) {
@@ -57,7 +57,7 @@ async function insertTask(task) {
 }
 
 export {
-    findAllTasks,
+    selectTasks,
     getTaskById,
     insertTask
 }
