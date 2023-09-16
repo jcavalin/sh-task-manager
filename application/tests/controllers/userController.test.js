@@ -1,7 +1,7 @@
 import {chai, app, expect} from '../test.js';
 import {verifyToken} from "../../src/helpers/authorizationToken.js";
 
-describe('User', () => {
+describe('User controller', () => {
 
     describe('Authenticate', () => {
 

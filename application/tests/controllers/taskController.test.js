@@ -2,7 +2,7 @@ import {chai, app, expect} from '../test.js';
 import {generateToken} from "../../src/helpers/authorizationToken.js";
 import {fetchTaskByUid, fetchTasks} from "../../src/repositories/taskRepository.js";
 
-describe('Task', () => {
+describe('Task controller', () => {
 
     describe('List', () => {
 
