@@ -9,7 +9,7 @@ services:
     depends_on:
       - db
 #      - mailhog
-#      - rabbitmq
+      - rabbitmq
       - flyway
     environment:
       APP_PORT: 80
@@ -77,11 +77,11 @@ services:
 #        - "8082:8025"
 #      command: -jim-accept=0.5 -jim-linkspeed-affect=0.5 -jim-linkspeed-max=1024
 #
-#    rabbitmq:
-#      image: rabbitmq:3.12-management-alpine
-#      ports:
-#        - '5672:5672'
-#        - '8083:15672'
-#      environment:
-#        - RABBITMQ_DEFAULT_USER=myuser
-#        - RABBITMQ_DEFAULT_PASS=mypassword
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    ports:
+      - '5672:5672'
+      - '8083:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=mypassword

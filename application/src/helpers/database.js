@@ -1,13 +1,22 @@
-import mysql from 'mysql2/promise';
+import {createPool} from 'mysql2/promise';
 import databaseConfig from "../config/databaseConfig.js";
 
-function connection() {
-    return mysql.createConnection(databaseConfig);
+let globalPool = null;
+
+function poolConnection() {
+    if (!globalPool) {
+        globalPool = createPool(databaseConfig);
+    }
+
+    return globalPool;
 }
 
 async function executeQuery(sql, parameters) {
-    const con = await connection();
-    const [results] = await con.execute(sql, parameters);
+    const pool = await poolConnection();
+    const connection = await pool.getConnection();
+
+    const [results] = await connection.execute(sql, parameters);
+    pool.releaseConnection(connection);
 
     return results;
 }
