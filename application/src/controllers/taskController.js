@@ -1,16 +1,13 @@
-import TaskService from "../services/TaskService.js";
+import {createTask, findAllTasks} from "../services/taskService.js";
 import label from "../config/labelConfig.js";
 
-const listTasks = async (req, res) => {
-    const service = new TaskService();
+async function listTasksAction(req, res) {
+    res.send(await findAllTasks(req.token));
+}
 
-    res.send(await service.findAll(req.token));
-};
-
-const createTask = async (req, res) => {
+async function createTaskAction(req, res) {
     try {
-        const service = new TaskService();
-        const id = await service.create({...req.body, ...req.token});
+        const id = await createTask({...req.body, ...req.token});
 
         res.send({id});
     } catch (error) {
@@ -18,9 +15,9 @@ const createTask = async (req, res) => {
 
         res.status(500).send({message: label('internal_error')});
     }
-};
+}
 
 export {
-    listTasks,
-    createTask
+    listTasksAction,
+    createTaskAction
 };

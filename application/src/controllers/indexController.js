@@ -1,5 +1,7 @@
-const home = (req, res) => res.send({});
+function homeAction(req, res) {
+    res.send({});
+}
 
 export {
-    home
+    homeAction
 };

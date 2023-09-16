@@ -1,5 +1,5 @@
 import label from "../../config/labelConfig.js";
-import AuthorizationToken from "../../helpers/AuthorizationToken.js";
+import {verifyToken} from "../../helpers/authorizationToken.js";
 
 export default (req, res, next) => {
     const token = req.headers['authorization'];
@@ -7,8 +7,7 @@ export default (req, res, next) => {
         return res.status(401).send({message: label('token_not_found')});
     }
 
-    const authorizationToken = new AuthorizationToken();
-    authorizationToken.verify(token, function (error, decoded) {
+    verifyToken(token, function (error, decoded) {
         if (error) {
             return res.status(403).send({message: label('token_invalid')});
         }
