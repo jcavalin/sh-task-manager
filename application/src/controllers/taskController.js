@@ -1,5 +1,6 @@
 import {createTask, getTasks} from "../services/taskService.js";
 import label from "../config/labelConfig.js";
+import {validateCreateTask} from "./validators/taskValidator.js";
 
 async function listTasksAction(req, res) {
     res.send(await getTasks(req.token));
@@ -7,7 +8,13 @@ async function listTasksAction(req, res) {
 
 async function createTaskAction(req, res) {
     try {
-        const id = await createTask({...req.body, ...req.token});
+        const {error, value} = validateCreateTask(req.body);
+        if (error) {
+            res.status(400).send({message: error.message});
+            return;
+        }
+
+        const id = await createTask({...value, ...req.token});
 
         res.send({id});
     } catch (error) {

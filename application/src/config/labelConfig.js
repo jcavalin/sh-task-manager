@@ -5,7 +5,7 @@ const labels = {
     token_invalid: 'Invalid token',
     user_not_found: 'User not found',
     internal_error: 'Internal error',
-    forbidden: 'Forbidden',
+    forbidden: 'Forbidden'
 };
 
 export default (label) => labels[label];
