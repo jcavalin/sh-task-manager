@@ -16,9 +16,7 @@ describe('User', () => {
 
                     expect(res.body)
                         .be.a('object')
-                        .and.have.property('token');
-
-                    expect(res.body.token)
+                        .and.have.property('token')
                         .and.to.be.a('string')
                         .and.not.be.empty;
 
@@ -37,9 +35,7 @@ describe('User', () => {
 
                     expect(res.body)
                         .be.a('object')
-                        .and.have.property('message');
-
-                    expect(res.body.message)
+                        .and.have.property('message')
                         .and.to.be.a('string')
                         .and.to.equal('"email" is required');
 
@@ -58,9 +54,7 @@ describe('User', () => {
 
                     expect(res.body)
                         .be.a('object')
-                        .and.have.property('message');
-
-                    expect(res.body.message)
+                        .and.have.property('message')
                         .and.to.be.a('string')
                         .and.to.equal('"email" must be a valid email');
 
@@ -79,9 +73,7 @@ describe('User', () => {
 
                     expect(res.body)
                         .be.a('object')
-                        .and.have.property('message');
-
-                    expect(res.body.message)
+                        .and.have.property('message')
                         .and.to.be.a('string')
                         .and.to.equal('"password" is required');
 
@@ -89,10 +81,15 @@ describe('User', () => {
                 });
         });
 
-        it('Should validate invalid email', (done) => {
-            chai.request(app)
+        it('Should validate invalid email or password', (done) => {
+            const data = [
+                {email: 'doesntexist@shtaskmapp.com', password: 'incorrect_password'},
+                {email: 'technician.1@shtaskmapp.com', password: 'incorrect_password'},
+            ];
+
+            data.forEach((dataRequest) => chai.request(app)
                 .post('/login/auth')
-                .send({email: 'doesntexist@shtaskmapp.com', password: 'incorrect_password'})
+                .send(dataRequest)
                 .end((err, res) => {
                     expect(err).to.be.null;
 
@@ -100,35 +97,12 @@ describe('User', () => {
 
                     expect(res.body)
                         .be.a('object')
-                        .and.have.property('message');
-
-                    expect(res.body.message)
+                        .and.have.property('message')
                         .and.to.be.a('string')
                         .and.to.equal('Authentication failed');
+                }));
 
-                    done();
-                });
-        });
-
-        it('Should validate invalid password', (done) => {
-            chai.request(app)
-                .post('/login/auth')
-                .send({email: 'technician.1@shtaskmapp.com', password: 'incorrect_password'})
-                .end((err, res) => {
-                    expect(err).to.be.null;
-
-                    expect(res).have.status(401);
-
-                    expect(res.body)
-                        .be.a('object')
-                        .and.have.property('message');
-
-                    expect(res.body.message)
-                        .and.to.be.a('string')
-                        .and.to.equal('Authentication failed');
-
-                    done();
-                });
+            done();
         });
 
         it('Should token include email and role', (done) => {
