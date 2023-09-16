@@ -81,7 +81,7 @@ describe('User', () => {
                 });
         });
 
-        it('Should validate invalid email or password', (done) => {
+        it('Should not authenticate user', (done) => {
             const data = [
                 {email: 'doesntexist@shtaskmapp.com', password: 'incorrect_password'},
                 {email: 'technician.1@shtaskmapp.com', password: 'incorrect_password'},
@@ -121,7 +121,7 @@ describe('User', () => {
                             .and.to.equal('technician.1@shtaskmapp.com');
 
                         expect(decoded)
-                            .and.have.property('role')
+                            .have.property('role')
                             .and.to.equal('TECHNICIAN');
 
                         done();
