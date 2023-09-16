@@ -13,3 +13,5 @@ const PORT = env.APP_PORT || 80;
 app.listen(PORT, () => {
     console.log(`Running on ${PORT}`);
 });
+
+export default app;
