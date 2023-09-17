@@ -12,7 +12,9 @@ services:
       - flyway
     environment:
       APP_PORT: 80
-      JWT_SECRET: appsupersecret # @todo change this to a more secure option
+      JWT_AUDIENCE: http://localhost
+      JWT_ISSUER: http://localhost/{ISSUER}
+      JWT_SECRET: appsupersecret
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_DATABASE: app
