@@ -7,7 +7,7 @@ To initialize the project, run the following command on the root directory:
 docker-compose up --build
 ```
 
-Wait for all services to be up and running and visit [http://localhost](http://localhost).
+Wait for all services to be up and running, then go to [http://localhost](http://localhost).
 
 <sub>PS: Also, wait for the migrations.</sub>
 
@@ -61,6 +61,7 @@ GET /api/v1/tasks
 
 POST /api/v1/tasks
     - Create a new task
+    - If any personal information should not be sent outside of the system, just add it between the <private> tags and it will be obfuscated before sending it.
     - Example: curl --request POST \
                   --url http://localhost/api/v1/tasks \
                   --header 'Content-Type: application/json' \

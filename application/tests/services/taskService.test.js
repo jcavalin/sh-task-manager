@@ -6,6 +6,11 @@ import {getManagersEmails} from "../../src/repositories/userRepository.js";
 describe('Task service', () => {
 
     describe('Create', () => {
+        const sandbox = sinon.createSandbox();
+
+        afterEach(function () {
+            sandbox.restore();
+        });
 
         it('Should notify managers with obfuscate personal information', (done) => {
             sinon.stub(mailer, 'asyncSendMail').callsFake((subject, body, to) => {
