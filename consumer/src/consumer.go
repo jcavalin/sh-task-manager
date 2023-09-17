@@ -1,42 +1,31 @@
 package main
 
 import (
+	config "consumer/src/config"
+	error "consumer/src/helpers/error"
+	mailer "consumer/src/helpers/mailer"
 	"encoding/json"
 	"log"
-	"net/smtp"
-	"os"
 
-	email "github.com/jordan-wright/email"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type NotifyQueueMessage struct {
-	Subject string
-	Body    string
-	From    string
-	To      []string
-}
-
 func main() {
-	host := os.Getenv("QUEUE_HOST")
-	port := os.Getenv("QUEUE_PORT")
-	username := os.Getenv("QUEUE_USERNAME")
-	password := os.Getenv("QUEUE_PASSWORD")
-	name := os.Getenv("QUEUE_NOTIFY_NAME")
+	host, port, username, password, name := config.QueueConfiguration()
 
 	connection, err := amqp.Dial("amqp://" + username + ":" + password + "@" + host + ":" + port)
-	failOnError(err, "Failed to connect to RabbitMQ")
+	error.FailOnError(err, "Failed to connect to RabbitMQ")
 	defer connection.Close()
 
 	channel, err := connection.Channel()
-	failOnError(err, "Failed to open a channel")
+	error.FailOnError(err, "Failed to open a channel")
 	defer channel.Close()
 
 	queue, err := channel.QueueDeclare(name, false, false, false, false, nil)
-	failOnError(err, "Failed to declare a queue")
+	error.FailOnError(err, "Failed to declare a queue")
 
 	messages, err := channel.Consume(queue.Name, "", true, false, false, false, nil)
-	failOnError(err, "Failed to register a consumer")
+	error.FailOnError(err, "Failed to register a consumer")
 
 	var forever chan struct{}
 
@@ -45,40 +34,18 @@ func main() {
 			log.Printf("Received a message: %s", message.Body)
 
 			queueMessage := unmarshalQueueMessage(message.Body)
-			sendEmail(queueMessage)
+			mailer.SendEmail(queueMessage)
 		}
 	}()
 
-	log.Printf("[*] Waiting for messages. To exit press CTRL+C")
+	log.Printf("Consumer waiting for messages...")
 	<-forever
 }
 
-func unmarshalQueueMessage(messageBody []byte) NotifyQueueMessage {
-	var queueMessage NotifyQueueMessage
+func unmarshalQueueMessage(messageBody []byte) mailer.MailerMessage {
+	var queueMessage mailer.MailerMessage
 	unmarshalError := json.Unmarshal(messageBody, &queueMessage)
-	failOnError(unmarshalError, "Failed to decode message")
+	error.FailOnError(unmarshalError, "Failed to decode message")
 
 	return queueMessage
-}
-
-func sendEmail(message NotifyQueueMessage) {
-	host := os.Getenv("EMAIL_HOST")
-	port := os.Getenv("EMAIL_PORT")
-	username := os.Getenv("EMAIL_USERNAME")
-	password := os.Getenv("EMAIL_PASSWORD")
-
-	emailMessage := email.NewEmail()
-	emailMessage.From = message.From
-	emailMessage.To = message.To
-	emailMessage.Subject = message.Subject
-	emailMessage.Text = []byte(message.Body)
-
-	err := emailMessage.Send(host+":"+port, smtp.CRAMMD5Auth(username, password))
-	failOnError(err, "Failed to send email")
-}
-
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Panicf("%s: %s", msg, err)
-	}
 }
