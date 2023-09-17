@@ -5,11 +5,10 @@ servers:
 info:
   description: |
     SH Tasks Manager System API Docs
-
   version: 1.0.0
   title: SH Tasks Manager System API Docs
-paths:
 
+paths:
   /api/v1/login/auth:
     post:
       tags:
@@ -49,14 +48,6 @@ paths:
         - tasks
       summary: Get tasks
       description: Get all tasks according to the user
-      operationId: tasks
-      parameters:
-        - name: authorization
-          in: header
-          description: 'Authorization token'
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
@@ -83,14 +74,6 @@ paths:
         - tasks
       summary: Create task
       description: Create a new task for the user
-      operationId: tasks
-      parameters:
-        - name: authorization
-          in: header
-          description: 'Authorization token'
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -127,7 +110,6 @@ paths:
       security:
         - authorization: [ ]
 
-
 components:
   schemas:
     User:
@@ -151,11 +133,12 @@ components:
         token:
           description: Authentication token
           type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+          example: |
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
     Tasks:
       type: array
       items:
-        - $ref: '#/components/schemas/Task'
+        $ref: '#/components/schemas/Task'
     Task:
       type: object
       properties:
@@ -191,18 +174,16 @@ components:
       type: object
       properties:
         summary:
-          description: Task summary
+          description: |
+            Task summary, any information inside of the tags "private" will be visible only inside of the system
           type: string
-          example: Performed task
+          example: Performed task <private>this is private</private>
           maxLength: 2500
-          required: true
         date:
           description: Task date
           type: string
           format: date
           example: 2023-09-17
-          required: true
-
     Message:
       type: object
       properties:
@@ -214,6 +195,6 @@ components:
   securitySchemes:
     authorization:
       description: Authorization token, can be get by the /login/auth endpoint
-      type: authorizationToken
+      type: apiKey
       name: authorization
       in: header
