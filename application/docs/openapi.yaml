@@ -1,0 +1,219 @@
+openapi: 3.0.0
+servers:
+  - url: //localhost
+    description: Default server
+info:
+  description: |
+    SH Tasks Manager System API Docs
+
+  version: 1.0.0
+  title: SH Tasks Manager System API Docs
+paths:
+
+  /api/v1/login/auth:
+    post:
+      tags:
+        - authentication
+      summary: Authenticate a user
+      description: Generate a authentication token for the user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: User information
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /api/v1/tasks:
+    get:
+      tags:
+        - tasks
+      summary: Get tasks
+      description: Get all tasks according to the user
+      operationId: tasks
+      parameters:
+        - name: authorization
+          in: header
+          description: 'Authorization token'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tasks'
+        '401':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '403':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      security:
+        - authorization: [ ]
+    post:
+      tags:
+        - tasks
+      summary: Create task
+      description: Create a new task for the user
+      operationId: tasks
+      parameters:
+        - name: authorization
+          in: header
+          description: 'Authorization token'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTask'
+        description: New task information
+        required:
+          true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: Token not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '403':
+          description: Invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      security:
+        - authorization: [ ]
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          description: User email address
+          type: string
+          format: email
+          example: technician.1@shtaskmapp.com
+        password:
+          type: string
+          description: >-
+            User password
+          format: password
+          minLength: 8
+          example: technician.1@secret
+    Token:
+      type: object
+      properties:
+        token:
+          description: Authentication token
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    Tasks:
+      type: array
+      items:
+        - $ref: '#/components/schemas/Task'
+    Task:
+      type: object
+      properties:
+        id:
+          description: Task identifier
+          type: string
+          example: a70afb03-552d-11ee-87e5-0242ac160002
+        summary:
+          description: Task summary
+          type: string
+          example: Performed task
+        date:
+          description: Task date
+          type: string
+          format: date
+          example: 2023-09-17
+        created_at:
+          description: When the task was created
+          type: string
+          format: datetime
+          example: 2023-09-17T07:41:45.000Z
+        updated_at:
+          description: When the task was updated
+          type: string
+          format: datetime
+          example: 2023-09-17T07:51:45.000Z
+        technician:
+          description: Email of the technician who performed the task
+          type: string
+          format: email
+          example: technician.2@shtaskmapp.com
+    NewTask:
+      type: object
+      properties:
+        summary:
+          description: Task summary
+          type: string
+          example: Performed task
+          maxLength: 2500
+          required: true
+        date:
+          description: Task date
+          type: string
+          format: date
+          example: 2023-09-17
+          required: true
+
+    Message:
+      type: object
+      properties:
+        message:
+          description: Content of the message
+          type: string
+          example: Invalid parameter
+
+  securitySchemes:
+    authorization:
+      description: Authorization token, can be get by the /login/auth endpoint
+      type: authorizationToken
+      name: authorization
+      in: header
