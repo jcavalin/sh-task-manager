@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db
+  labels:
+    app.kubernetes.io/name: proxy
+spec:
+  containers:
+  - name: db
+    image: mysql:8.1.0
+    args:
+      - --default-authentication-plugin=caching_sha2_password
+    env:
+      - name: MYSQL_DATABASE
+        value: app
+      - name: MYSQL_PASSWORD
+        value: mypass
+      - name: MYSQL_ROOT_PASSWORD
+        value: myrootpass
+      - name: MYSQL_USER
+        value: mysql

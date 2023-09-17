@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: adminer
+  labels:
+    app.kubernetes.io/name: proxy
+spec:
+  containers:
+  - name: adminer
+    image: adminer:4.8.1-standalone
