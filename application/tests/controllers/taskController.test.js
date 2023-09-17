@@ -8,7 +8,7 @@ describe('Task controller', () => {
 
         it('Should require token', (done) => {
             chai.request(app)
-                .get('/tasks')
+                .get('/api/v1/tasks')
                 .send({})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -29,7 +29,7 @@ describe('Task controller', () => {
             const token = generateToken({email: 'doesntexist@shtaskmapp.com', role: 'MANAGER'});
 
             chai.request(app)
-                .get('/tasks')
+                .get('/api/v1/tasks')
                 .send({})
                 .set('authorization', token)
                 .end((err, res) => {
@@ -52,7 +52,7 @@ describe('Task controller', () => {
 
             it('Should see all tasks', (done) => {
                 chai.request(app)
-                    .get('/tasks')
+                    .get('/api/v1/tasks')
                     .set('authorization', token)
                     .end((err, res) => {
                         expect(err).to.be.null;
@@ -74,7 +74,7 @@ describe('Task controller', () => {
 
             it('Should see only own tasks', (done) => {
                 chai.request(app)
-                    .get('/tasks')
+                    .get('/api/v1/tasks')
                     .set('authorization', token)
                     .end((err, res) => {
                         expect(err).to.be.null;
@@ -96,7 +96,7 @@ describe('Task controller', () => {
 
         it('Should require token', (done) => {
             chai.request(app)
-                .post('/tasks')
+                .post('/api/v1/tasks')
                 .send({})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -117,7 +117,7 @@ describe('Task controller', () => {
             const token = generateToken({email: 'doesntexist@shtaskmapp.com', role: 'TECHNICIAN'});
 
             chai.request(app)
-                .post('/tasks')
+                .post('/api/v1/tasks')
                 .send({summary: "summary", date: "2023-09-16"})
                 .set('authorization', token)
                 .end((err, res) => {
@@ -140,7 +140,7 @@ describe('Task controller', () => {
 
             it('Should not allow creating a new task', (done) => {
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .end((err, res) => {
                         expect(err).to.be.null;
@@ -167,7 +167,7 @@ describe('Task controller', () => {
                 const payload = {summary: "test", date: "2023-09-15"};
 
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .send(payload)
                     .end((err, res) => {
@@ -195,7 +195,7 @@ describe('Task controller', () => {
 
             it('Should require summary', (done) => {
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .send({})
                     .end((err, res) => {
@@ -215,7 +215,7 @@ describe('Task controller', () => {
 
             it('Should validate summary length', (done) => {
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .send({summary: "summary".repeat(360)})
                     .end((err, res) => {
@@ -235,7 +235,7 @@ describe('Task controller', () => {
 
             it('Should require date', (done) => {
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .send({summary: "summary"})
                     .end((err, res) => {
@@ -255,7 +255,7 @@ describe('Task controller', () => {
 
             it('Should validate date', (done) => {
                 chai.request(app)
-                    .post('/tasks')
+                    .post('/api/v1/tasks')
                     .set('authorization', token)
                     .send({summary: "summary", date: "not-a-date"})
                     .end((err, res) => {

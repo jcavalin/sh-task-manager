@@ -7,7 +7,7 @@ describe('User controller', () => {
 
         it('Should authenticate user', (done) => {
             chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send({email: 'technician.1@shtaskmapp.com', password: 'technician.1@secret'})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -26,7 +26,7 @@ describe('User controller', () => {
 
         it('Should require email', (done) => {
             chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send({})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -45,7 +45,7 @@ describe('User controller', () => {
 
         it('Should validate email', (done) => {
             chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send({email: 'not_an_email'})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -64,7 +64,7 @@ describe('User controller', () => {
 
         it('Should require password', (done) => {
             chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send({email: 'doesntexist@shtaskmapp.com'})
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -88,7 +88,7 @@ describe('User controller', () => {
             ];
 
             data.forEach((dataRequest) => chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send(dataRequest)
                 .end((err, res) => {
                     expect(err).to.be.null;
@@ -107,7 +107,7 @@ describe('User controller', () => {
 
         it('Should token include email and role', (done) => {
             chai.request(app)
-                .post('/login/auth')
+                .post('/api/v1/login/auth')
                 .send({email: 'technician.1@shtaskmapp.com', password: 'technician.1@secret'})
                 .end((err, res) => {
                     expect(err).to.be.null;

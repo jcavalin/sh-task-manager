@@ -42,7 +42,7 @@ async function createTask(task) {
 
     const taskCreated = await getTaskById(id);
 
-    notifyMangersNewTask(taskCreated).then(
+    notifyMangersNewTask({...taskCreated}).then(
         () => {/*console.log("Notification queued")*/},
         (error) => console.error(error)
     );
