@@ -2,7 +2,9 @@ import {queueMessage} from "./queue.js";
 import queueConfig from "../config/queueConfig.js";
 import emailConfig from "../config/emailConfig.js";
 
-function asyncSendMail(subject, body, to) {
+const mailer = {};
+
+mailer.asyncSendMail = (subject, body, to) => {
     return queueMessage(
         queueConfig.notify_queue,
         {
@@ -14,6 +16,4 @@ function asyncSendMail(subject, body, to) {
     );
 }
 
-export {
-    asyncSendMail
-}
+export default mailer;

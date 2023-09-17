@@ -2,7 +2,7 @@ import {fetchTaskById, fetchTasks, insertTask} from "../repositories/taskReposit
 import {getUserByEmail} from "./userService.js";
 import label from "../helpers/label.js";
 import {isManagerUser} from "../helpers/role.js";
-import {asyncSendMail} from "../helpers/mailer.js";
+import mailer from "../../src/helpers/mailer.js";
 import {getManagersEmails} from "../repositories/userRepository.js";
 import logger from "../helpers/logger.js";
 
@@ -64,7 +64,7 @@ async function notifyMangersNewTask(task) {
         ${task.summary}
     `;
 
-    return asyncSendMail(
+    return mailer.asyncSendMail(
         `Task #${id} has been created`,
         message,
         emails
