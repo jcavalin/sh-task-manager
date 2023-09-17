@@ -42,6 +42,8 @@ services:
         QUEUE_USERNAME: myuser
         QUEUE_PASSWORD: mypassword
         QUEUE_NOTIFY_NAME: notify
+      volumes:
+        - ./consumer:/usr/app
 
   db:
     image: mysql:8.1.0
