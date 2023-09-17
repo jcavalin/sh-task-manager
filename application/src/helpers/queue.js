@@ -1,5 +1,6 @@
 import amqp from "amqplib";
 import queueConfig from "../config/queueConfig.js";
+import logger from "./logger.js";
 
 async function createConnection() {
     return await amqp.connect(
@@ -20,11 +21,11 @@ async function queueMessage(queue, message) {
 
         await channel.assertQueue(queue, {durable: false});
         channel.sendToQueue(queue, Buffer.from(message));
-        // console.log(`Sent to queue '${queue}'`); // @todo Add a proper log
+        logger.info(`Sent to queue '${queue}'`);
 
         await channel.close();
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        logger.error(error.message);
     } finally {
         if (connection) {
             await connection.close();

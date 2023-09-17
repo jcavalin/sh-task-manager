@@ -4,6 +4,7 @@ import label from "../helpers/label.js";
 import {isManagerUser} from "../helpers/role.js";
 import {asyncSendMail} from "../helpers/mailer.js";
 import {getManagersEmails} from "../repositories/userRepository.js";
+import logger from "../helpers/logger.js";
 
 async function getTasks(email) {
     const user = await getUserByEmail(email);
@@ -43,8 +44,8 @@ async function createTask(task) {
     const taskCreated = await getTaskById(id);
 
     notifyMangersNewTask({...taskCreated}).then(
-        () => {/*console.log("Notification queued")*/},
-        (error) => console.error(error)
+        () => logger.info("Notification queued"),
+        (error) => logger.error(error.message)
     );
 
     return formatTaskToReturn(taskCreated);
