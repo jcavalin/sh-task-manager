@@ -1,9 +1,10 @@
 package mailer
 
 import (
+	"net/smtp"
+
 	config "consumer/src/config"
 	error "consumer/src/helpers/error"
-	"net/smtp"
 
 	"github.com/jordan-wright/email"
 )

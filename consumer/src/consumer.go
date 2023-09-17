@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
+	"time"
+
 	config "consumer/src/config"
 	error "consumer/src/helpers/error"
 	mailer "consumer/src/helpers/mailer"
-	"encoding/json"
-	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -13,8 +15,7 @@ import (
 func main() {
 	host, port, username, password, name := config.QueueConfiguration()
 
-	connection, err := amqp.Dial("amqp://" + username + ":" + password + "@" + host + ":" + port)
-	error.FailOnError(err, "Failed to connect to RabbitMQ")
+	connection := connectToQueue(host, port, username, password, 10)
 	defer connection.Close()
 
 	channel, err := connection.Channel()
@@ -40,6 +41,23 @@ func main() {
 
 	log.Printf("Consumer waiting for messages...")
 	<-forever
+}
+
+func connectToQueue(host, port, username, password string, retry int) *amqp.Connection {
+	connection, err := amqp.Dial("amqp://" + username + ":" + password + "@" + host + ":" + port)
+
+	if err != nil && retry == 0 {
+		error.FailOnError(err, "Failed to connect to queue")
+	}
+
+	if err != nil {
+		log.Println("Failed to connect to queue, trying again...")
+		time.Sleep(5 * time.Second)
+
+		return connectToQueue(host, port, username, password, retry-1)
+	}
+
+	return connection
 }
 
 func unmarshalQueueMessage(messageBody []byte) mailer.MailerMessage {
