@@ -1,6 +1,6 @@
-import {executeQuery, fetchOne, insert} from '../helpers/database.js'
+import {fetchPaginated, fetchRow, insert} from '../helpers/database.js'
 
-function fetchTasks(userEmail) {
+async function fetchTasksPaginated(userEmail, page, limit) {
     let where = '';
     let parameters = [];
     if (userEmail) {
@@ -8,7 +8,7 @@ function fetchTasks(userEmail) {
         parameters.push(userEmail);
     }
 
-    return executeQuery(
+    return fetchPaginated(
         `SELECT 
                 task.uid AS id, 
                 task.summary, 
@@ -23,12 +23,14 @@ function fetchTasks(userEmail) {
             ${where}
             ORDER BY 
                 created_at DESC`,
-        parameters
+        parameters,
+        page,
+        limit
     );
 }
 
 function fetchTaskById(id) {
-    return fetchOne(
+    return fetchRow(
         `SELECT 
                     task.uid AS id,
                     task.summary,
@@ -46,7 +48,7 @@ function fetchTaskById(id) {
     );
 }
 function fetchTaskByUid(uid) {
-    return fetchOne(
+    return fetchRow(
         `SELECT 
                     task.uid AS id,
                     task.summary,
@@ -73,7 +75,7 @@ function insertTask(task) {
 }
 
 export {
-    fetchTasks,
+    fetchTasksPaginated,
     fetchTaskById,
     fetchTaskByUid,
     insertTask

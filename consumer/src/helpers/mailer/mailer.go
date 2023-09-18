@@ -4,7 +4,7 @@ import (
 	"net/smtp"
 
 	config "consumer/src/config"
-	error "consumer/src/helpers/error"
+	logger "consumer/src/helpers/logger"
 
 	"github.com/jordan-wright/email"
 )
@@ -26,5 +26,5 @@ func SendEmail(message MailerMessage) {
 	emailMessage.Text = []byte(message.Body)
 
 	err := emailMessage.Send(host+":"+port, smtp.CRAMMD5Auth(username, password))
-	error.FailOnError(err, "Failed to send email")
+	logger.FailOnError(err, "Failed to send email")
 }

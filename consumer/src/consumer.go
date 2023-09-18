@@ -6,7 +6,7 @@ import (
 	"time"
 
 	config "consumer/src/config"
-	error "consumer/src/helpers/error"
+	logger "consumer/src/helpers/logger"
 	mailer "consumer/src/helpers/mailer"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -19,14 +19,14 @@ func main() {
 	defer connection.Close()
 
 	channel, err := connection.Channel()
-	error.FailOnError(err, "Failed to open a channel")
+	logger.FailOnError(err, "Failed to open a channel")
 	defer channel.Close()
 
 	queue, err := channel.QueueDeclare(name, false, false, false, false, nil)
-	error.FailOnError(err, "Failed to declare a queue")
+	logger.FailOnError(err, "Failed to declare a queue")
 
 	messages, err := channel.Consume(queue.Name, "", true, false, false, false, nil)
-	error.FailOnError(err, "Failed to register a consumer")
+	logger.FailOnError(err, "Failed to register a consumer")
 
 	var forever chan struct{}
 
@@ -47,7 +47,7 @@ func connectToQueue(host, port, username, password string, retry int) *amqp.Conn
 	connection, err := amqp.Dial("amqp://" + username + ":" + password + "@" + host + ":" + port)
 
 	if err != nil && retry == 0 {
-		error.FailOnError(err, "Failed to connect to queue")
+		logger.FailOnError(err, "Failed to connect to queue")
 	}
 
 	if err != nil {
@@ -63,7 +63,7 @@ func connectToQueue(host, port, username, password string, retry int) *amqp.Conn
 func unmarshalQueueMessage(messageBody []byte) mailer.MailerMessage {
 	var queueMessage mailer.MailerMessage
 	unmarshalError := json.Unmarshal(messageBody, &queueMessage)
-	error.FailOnError(unmarshalError, "Failed to decode message")
+	logger.FailOnError(unmarshalError, "Failed to decode message")
 
 	return queueMessage
 }

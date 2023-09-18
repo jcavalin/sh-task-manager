@@ -1,8 +1,8 @@
-import {fetchOne, executeQuery} from "../helpers/database.js";
+import {fetchRow, executeQuery} from "../helpers/database.js";
 import {managerType} from "../helpers/role.js";
 
 function getUserByEmail(email) {
-    return fetchOne("SELECT id, email, password, role FROM app.user WHERE email = ?", [email]);
+    return fetchRow("SELECT id, email, password, role FROM app.user WHERE email = ?", [email]);
 }
 
 async function getManagersEmails() {

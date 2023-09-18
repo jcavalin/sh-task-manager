@@ -1,6 +1,6 @@
 import {chai, app, expect} from '../test.js';
 import {generateToken} from "../../src/helpers/authorizationToken.js";
-import {fetchTaskByUid, fetchTasks} from "../../src/repositories/taskRepository.js";
+import {fetchTaskByUid, fetchTasksPaginated} from "../../src/repositories/taskRepository.js";
 
 describe('Task controller', () => {
 
@@ -59,10 +59,10 @@ describe('Task controller', () => {
 
                         expect(res).have.status(200);
 
-                        expect(res.body).be.a('array');
+                        expect(res.body).be.a('object');
 
-                        expect(fetchTasks().then((tasks) => tasks.length))
-                            .to.eventually.be.equal(res.body.length)
+                        expect(fetchTasksPaginated().then((tasks) => tasks.pagination.total))
+                            .to.eventually.be.equal(res.body.pagination.total)
                             .notify(done);
                     });
             });
@@ -81,10 +81,10 @@ describe('Task controller', () => {
 
                         expect(res).have.status(200);
 
-                        expect(res.body).be.a('array');
+                        expect(res.body).be.a('object');
 
-                        expect(fetchTasks(tokenInfo.email).then((tasks) => tasks.length))
-                            .to.eventually.be.equal(res.body.length)
+                        expect(fetchTasksPaginated(tokenInfo.email).then((tasks) => tasks.pagination.total))
+                            .to.eventually.be.equal(res.body.pagination.total)
                             .notify(done);
                     });
             });
@@ -173,7 +173,7 @@ describe('Task controller', () => {
                     .end((err, res) => {
                         expect(err).to.be.null;
 
-                        expect(res).have.status(200);
+                        expect(res).have.status(201);
 
                         expect(res.body)
                             .be.a('object')

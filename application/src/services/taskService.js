@@ -1,4 +1,4 @@
-import {fetchTaskById, fetchTasks, insertTask} from "../repositories/taskRepository.js";
+import {fetchTaskById, fetchTasksPaginated, insertTask} from "../repositories/taskRepository.js";
 import {getUserByEmail} from "./userService.js";
 import label from "../helpers/label.js";
 import {isManagerUser} from "../helpers/role.js";
@@ -6,14 +6,20 @@ import mailer from "../../src/helpers/mailer.js";
 import {getManagersEmails} from "../repositories/userRepository.js";
 import logger from "../helpers/logger.js";
 
-async function getTasks(email) {
+async function getTasksList(email, page, limit) {
     const user = await getUserByEmail(email);
     if (!user) {
         throw new Error(label('user_not_found'));
     }
 
-    const result = await fetchTasks(isManagerUser(user) ? null : user.email);
-    return result.map(formatTaskToReturn);
+    const result = await fetchTasksPaginated(
+        isManagerUser(user) ? null : user.email,
+        page,
+        limit
+    );
+    result.data = result.data.map(formatTaskToReturn)
+
+    return result;
 }
 
 async function getTaskById(id) {
@@ -23,7 +29,7 @@ async function getTaskById(id) {
 }
 
 function formatTaskToReturn(task) {
-    task.date = new Date(task.date).toISOString().slice(0, 10);
+    task.date = taskDateToString(task.date);
 
     return task;
 }
@@ -37,7 +43,7 @@ async function createTask(task) {
 
     const id = await insertTask({
         summary: task.summary,
-        date: task.date,
+        date: taskDateToString(task.date),
         user_id: user.id
     });
 
@@ -49,6 +55,10 @@ async function createTask(task) {
     );
 
     return formatTaskToReturn(taskCreated);
+}
+
+function taskDateToString(date) {
+    return new Date(date).toISOString().slice(0, 10)
 }
 
 async function notifyMangersNewTask(task) {
@@ -82,6 +92,6 @@ function obfuscatePrivateData(task) {
 }
 
 export {
-    getTasks,
+    getTasksList,
     createTask
 }

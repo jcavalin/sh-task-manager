@@ -47,14 +47,25 @@ paths:
       tags:
         - tasks
       summary: Get tasks
-      description: Get all tasks according to the user
+      description: Get a list of tasks according to the user
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Number of the page
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Number of records per page
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tasks'
+                $ref: '#/components/schemas/PaginatedTasks'
         '401':
           description: Token not found
           content:
@@ -135,10 +146,31 @@ components:
           type: string
           example: |
             eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    Tasks:
-      type: array
-      items:
-        $ref: '#/components/schemas/Task'
+    PaginatedTasks:
+      type: object
+      properties:
+        data:
+          description: Tasks
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        pagination:
+          description: Pagination metadata
+          type: object
+          properties:
+              total:
+                description: Total of records
+                type: integer
+                example: 20
+              page:
+                description: Current page
+                type: integer
+                example: 1
+              pages:
+                description: Total of pages
+                type: integer
+                example: 2
+
     Task:
       type: object
       properties:
