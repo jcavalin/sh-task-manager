@@ -1,21 +1,76 @@
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
   name: db
   labels:
-    app.kubernetes.io/name: proxy
+    app: sh-task-manager
 spec:
-  containers:
-  - name: db
-    image: mysql:8.1.0
-    args:
-      - --default-authentication-plugin=caching_sha2_password
-    env:
-      - name: MYSQL_DATABASE
-        value: app
-      - name: MYSQL_PASSWORD
-        value: mypass
-      - name: MYSQL_ROOT_PASSWORD
-        value: myrootpass
-      - name: MYSQL_USER
-        value: mysql
+  ports:
+    - port: 3306
+  selector:
+    app: sh-task-manager
+    tier: db
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pv-claim
+  labels:
+    app: sh-task-manager
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    app: sh-task-manager
+spec:
+  selector:
+    matchLabels:
+      app: sh-task-manager
+      tier: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sh-task-manager
+        tier: db
+    spec:
+      containers:
+        - image: mysql:8.0
+          name: db
+          args:
+            - --default-authentication-plugin=caching_sha2_password
+          env:
+            - name: MYSQL_DATABASE
+              value: app
+            - name: MYSQL_USER
+              value: mysql
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-pass
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-root-pass
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: db
+          volumeMounts:
+            - name: db-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: db-persistent-storage
+          persistentVolumeClaim:
+            claimName: db-pv-claim

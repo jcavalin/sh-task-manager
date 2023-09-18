@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailhog
+  labels:
+    app: sh-task-manager
+spec:
+  ports:
+    - port: 8025
+      name: mailhog-web
+  selector:
+    app: sh-task-manager
+    tier: mailhog
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailhog
+  labels:
+    app: sh-task-manager
+spec:
+  selector:
+    matchLabels:
+      app: sh-task-manager
+      tier: mailhog
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sh-task-manager
+        tier: mailhog
+    spec:
+      containers:
+        - image: mailhog/mailhog
+          name: mailhog
+          args:
+            - -jim-accept=0.5
+            - -jim-linkspeed-affect=0.5
+            - -jim-linkspeed-max=1024
+          ports:
+            - containerPort: 8025
+              name: mailhog-web
+            - containerPort: 1025
+              name: mailhog

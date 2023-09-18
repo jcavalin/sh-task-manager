@@ -1,10 +1,39 @@
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
   name: adminer
   labels:
-    app.kubernetes.io/name: proxy
+    app: sh-task-manager
 spec:
-  containers:
-  - name: adminer
-    image: adminer:4.8.1-standalone
+  ports:
+    - port: 8080
+  selector:
+    app: sh-task-manager
+    tier: adminer
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  labels:
+    app: sh-task-manager
+spec:
+  selector:
+    matchLabels:
+      app: sh-task-manager
+      tier: adminer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sh-task-manager
+        tier: adminer
+    spec:
+      containers:
+        - image: adminer:4.8.1-standalone
+          name: adminer
+          ports:
+            - containerPort: 8080
+              name: adminer

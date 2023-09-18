@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: consumer
+  labels:
+    app: sh-task-manager
+spec:
+  template:
+    metadata:
+      labels:
+        app: sh-task-manager
+        tier: consumer
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - image: jcavalin/consumer
+          name: consumer
+          env:
+            - name: EMAIL_HOST
+              value: mailhog
+            - name: EMAIL_USERNAME
+              value: ''
+            - name: EMAIL_PASSWORD
+              value: ''
+            - name: EMAIL_PORT
+              value: '1025'
+            - name: QUEUE_HOST
+              value: rabbitmq
+            - name: QUEUE_PORT
+              value: '5672'
+            - name: QUEUE_USERNAME
+              value: myuser
+            - name: QUEUE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-pass
+                  key: password
+            - name: QUEUE_NOTIFY_NAME
+              value: notify

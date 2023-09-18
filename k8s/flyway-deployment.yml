@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: flyway
+  labels:
+    app: sh-task-manager
+spec:
+  template:
+    metadata:
+      labels:
+        app: sh-task-manager
+        tier: flyway
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - image: flyway/flyway:9.22.1
+          name: flyway
+          args:
+            - -url=jdbc:mysql://db
+            - -schemas=app
+            - -user=mysql
+            - -password=$(DB_PASSWORD)
+            - -connectRetries=60
+            - migrate
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-pass
+                  key: password
+          volumeMounts:
+            - mountPath: /flyway/sql/
+              name: mydir
+      volumes:
+        - name: mydir
+          hostPath:
+            path: /mnt/migrations
+            type: DirectoryOrCreate
