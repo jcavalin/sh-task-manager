@@ -51,6 +51,7 @@ async function fetchPaginated(sql, parameters, page, limit) {
         data,
         pagination: {
             total,
+            limit,
             page: page,
             pages: total > 0 ? Math.ceil(total / limit) : 0
         }

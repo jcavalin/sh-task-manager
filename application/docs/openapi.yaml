@@ -12,7 +12,7 @@ paths:
   /api/v1/login/auth:
     post:
       tags:
-        - authentication
+        - Authentication
       summary: Authenticate a user
       description: Generate a authentication token for the user.
       requestBody:
@@ -45,7 +45,7 @@ paths:
   /api/v1/tasks:
     get:
       tags:
-        - tasks
+        - Tasks
       summary: Get tasks
       description: Get a list of tasks according to the user
       parameters:
@@ -82,7 +82,7 @@ paths:
         - authorization: [ ]
     post:
       tags:
-        - tasks
+        - Tasks
       summary: Create task
       description: Create a new task for the user
       requestBody:
@@ -162,6 +162,10 @@ components:
                 description: Total of records
                 type: integer
                 example: 20
+              limit:
+                description: Limit of the records
+                type: integer
+                example: 10
               page:
                 description: Current page
                 type: integer
