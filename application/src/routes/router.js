@@ -1,4 +1,4 @@
-import {technicianType, managerType} from "../helpers/role.js";
+import {technicianRole, managerRole} from "../helpers/role.js";
 import authorizer from "./middlewares/authorizer.js";
 import roleManager from "./middlewares/roleManager.js";
 import {openApiAction, docsAction} from '../controllers/docsController.js';
@@ -11,6 +11,6 @@ export default function (app) {
 
     app.post('/api/v1/login/auth', authenticateAction);
 
-    app.get('/api/v1/tasks', authorizer, roleManager([technicianType, managerType]), listTasksAction);
-    app.post('/api/v1/tasks', authorizer, roleManager(technicianType), createTaskAction);
+    app.get('/api/v1/tasks', authorizer, roleManager([technicianRole, managerRole]), listTasksAction);
+    app.post('/api/v1/tasks', authorizer, roleManager(technicianRole), createTaskAction);
 };

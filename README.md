@@ -1,7 +1,7 @@
 # SH Tasks Manager System
 
 #### How to execute
-To initialize the project, run the following command on the root directory:
+To start the project, run the following command on the root directory:
 
 ```
 docker-compose up --build
@@ -46,34 +46,39 @@ The application has three endpoints:
 ```
 POST /api/v1/login/auth
     - Authenticate a user
-    - Example: curl --request POST \
-                  --url http://localhost/api/v1/login/auth \
-                  --header 'Content-Type: application/json' \
-                  --data '{
-                    "email": "technician.2@shtaskmapp.com",
-                    "password": "technician.2@secret"
-                }'
+    - Example: 
+         curl --request POST \
+            --url http://localhost/api/v1/login/auth \
+            --header 'Content-Type: application/json' \
+            --data '{
+              "email": "technician.2@shtaskmapp.com",
+              "password": "technician.2@secret"
+          }'
+                
 GET /api/v1/tasks
     - Get tasks
-    - Example: curl --request GET \
+    - Example: 
+         curl --request GET \
               --url http://localhost/api/v1/tasks?page=1&limit=10 \
               --header 'authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
 
 POST /api/v1/tasks
     - Create a new task
     - If any personal information should not be sent outside of the system, just add it between the <private> tags and it will be obfuscated before sending it.
-    - Example: curl --request POST \
-                  --url http://localhost/api/v1/tasks \
-                  --header 'Content-Type: application/json' \
-                  --header 'authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c' \
-                  --data '{
-                    "summary" : "Summary <private>this is private</private>",
-                    "date": "2023-09-17"
-                }'
+    - Example: 
+         curl --request POST \
+            --url http://localhost/api/v1/tasks \
+            --header 'Content-Type: application/json' \
+            --header 'authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c' \
+            --data '{
+              "summary" : "Summary <private>this is private</private>",
+              "date": "2023-09-17"
+          }'
 ```
 
 Besides the authentication endpoint, each other needs the ```authorization``` header to be informed in the request.
-There are three users available:
+
+There are three users available to authenticate:
 
 ```
 Technician type:

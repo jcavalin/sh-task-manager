@@ -1,8 +1,9 @@
 import {fetchPaginated, fetchRow, insert} from '../helpers/database.js'
 
-async function fetchTasksPaginated(userEmail, page, limit) {
+function fetchTasksPaginated(userEmail, page, limit) {
     let where = '';
     let parameters = [];
+
     if (userEmail) {
         where = 'WHERE user.email = ?';
         parameters.push(userEmail);
@@ -47,6 +48,7 @@ function fetchTaskById(id) {
         [id]
     );
 }
+
 function fetchTaskByUid(uid) {
     return fetchRow(
         `SELECT 

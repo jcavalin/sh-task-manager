@@ -1,7 +1,7 @@
 import {expect, sinon} from "../test.js";
 import {createTask} from "../../src/services/taskService.js";
 import mailer from "../../src/helpers/mailer.js";
-import {getManagersEmails} from "../../src/repositories/userRepository.js";
+import {getManagersEmail} from "../../src/repositories/userRepository.js";
 
 describe('Task service', () => {
 
@@ -18,7 +18,7 @@ describe('Task service', () => {
                     expect(body).to.contain.oneOf(['summary', '*****'])
                         .and.not.contain.oneOf(['private', 'personal', 'information']);
 
-                    const emails = getManagersEmails();
+                    const emails = getManagersEmail();
                     expect(emails).to.eventually.have.all.members(to)
                         .notify(done);
                 } catch (e) {

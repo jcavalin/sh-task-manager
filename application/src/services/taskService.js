@@ -3,7 +3,7 @@ import {getUserByEmail} from "./userService.js";
 import label from "../helpers/label.js";
 import {isManagerUser} from "../helpers/role.js";
 import mailer from "../../src/helpers/mailer.js";
-import {getManagersEmails} from "../repositories/userRepository.js";
+import {getManagersEmail} from "../repositories/userRepository.js";
 import logger from "../helpers/logger.js";
 import {dateToString} from "../helpers/date.js";
 
@@ -18,8 +18,8 @@ async function getTasksList(email, page, limit) {
         page,
         limit
     );
-    result.data = result.data.map(formatTaskToReturn)
 
+    result.data.forEach(formatTaskToReturn)
     return result;
 }
 
@@ -37,7 +37,6 @@ function formatTaskToReturn(task) {
 
 async function createTask(task) {
     const user = await getUserByEmail(task.email);
-
     if (!user) {
         throw new Error(label('user_not_found'));
     }
@@ -59,10 +58,10 @@ async function createTask(task) {
 }
 
 async function notifyMangersNewTask(task) {
-    task = formatTaskToReturn(task);
-    task = obfuscatePrivateData(task);
+    formatTaskToReturn(task);
+    obfuscatePrivateData(task);
 
-    const emails = await getManagersEmails();
+    const emails = await getManagersEmail();
     const id = task.id.split('-')[0];
     const message = `
         The tech "${task.technician}" performed a new the task on date "${task.date}".

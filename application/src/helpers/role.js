@@ -1,12 +1,12 @@
-const technicianType = 'TECHNICIAN';
-const managerType = 'MANAGER';
+const technicianRole = 'TECHNICIAN';
+const managerRole = 'MANAGER';
 
 function isManagerUser(user) {
-    return user.role === managerType;
+    return user.role === managerRole;
 }
 
 export {
-    technicianType,
-    managerType,
+    technicianRole,
+    managerRole,
     isManagerUser
 }

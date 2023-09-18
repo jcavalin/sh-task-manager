@@ -37,10 +37,10 @@ async function fetchRow(sql, parameters) {
 async function fetchPaginated(sql, parameters, page, limit) {
     page = page && parseInt(page) > 1 ? parseInt(page) : 1;
     limit = limit && parseInt(limit) > 0 ? parseInt(limit) : 10;
-    const offset = (limit * page) - limit;
 
     const {total} = await fetchRow(`SELECT COUNT(1) AS total FROM (${sql}) t`, parameters);
 
+    const offset = (limit * page) - limit;
     const paginateParameters = [...parameters];
     paginateParameters.push(limit);
     paginateParameters.push(offset);
