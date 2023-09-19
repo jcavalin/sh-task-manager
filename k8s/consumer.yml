@@ -13,8 +13,9 @@ spec:
     spec:
       restartPolicy: OnFailure
       containers:
-        - image: jcavalin/consumer
+        - image: sh-task-manager-consumer
           name: consumer
+          imagePullPolicy: Never
           env:
             - name: EMAIL_HOST
               value: mailhog

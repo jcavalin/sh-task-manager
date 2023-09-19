@@ -32,8 +32,9 @@ spec:
         tier: application
     spec:
       containers:
-        - image: jcavalin/application
+        - image: sh-task-manager-application
           name: application
+          imagePullPolicy: Never
           env:
             - name: APP_PORT
               value: '80'

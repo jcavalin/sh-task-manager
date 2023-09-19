@@ -8,6 +8,8 @@ spec:
   ports:
     - port: 8025
       name: mailhog-web
+    - port: 1025
+      name: mailhog
   selector:
     app: sh-task-manager
     tier: mailhog

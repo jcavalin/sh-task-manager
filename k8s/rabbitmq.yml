@@ -8,6 +8,8 @@ spec:
   ports:
     - port: 15672
       name: rabbitmq-web
+    - port: 5672
+      name: rabbitmq
   selector:
     app: sh-task-manager
     tier: rabbitmq

@@ -12,10 +12,10 @@ secretGenerator:
     literals:
       - tokenSecret=appsupersecret
 resources:
-  - application-deployment.yml
-  - consumer-deployment.yml
-  - db-deployment.yml
-  - adminer-deployment.yml
-  - mailhog-deployment.yml
-  - rabbitmq-deployment.yml
-  - flyway-deployment.yml
+  - application.yml
+  - consumer.yml
+  - db.yml
+  - adminer.yml
+  - mailhog.yml
+  - rabbitmq.yml
+  - flyway.yml
